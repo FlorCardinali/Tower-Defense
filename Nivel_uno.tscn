@@ -1,3 +1,42 @@
 [gd_scene format=3 uid="uid://bxg0kjcr3w6pg"]
 
-[node name="Node3D" type="Node3D" unique_id=203095301]
+[sub_resource type="PlaneMesh" id="PlaneMesh_qyjo4"]
+size = Vector2(220, 170)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sv058"]
+albedo_color = Color(0.26810738, 0.37748235, 0.20600665, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4aaex"]
+size = Vector3(150, 0.2, 150)
+
+[sub_resource type="PrismMesh" id="PrismMesh_qyjo4"]
+size = Vector3(20, 15, 20)
+
+[node name="Node" type="Node" unique_id=440887220]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1394101280]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=877725791]
+transform = Transform3D(1.3573685, 0, 0, 0, 1, 0, 0, 0, 0.96961516, 0, 0, -1.2199059)
+mesh = SubResource("PlaneMesh_qyjo4")
+surface_material_override/0 = SubResource("StandardMaterial3D_sv058")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1582164041]
+shape = SubResource("BoxShape3D_4aaex")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1018206057]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 1.1745644, 60.378807, 64.22506)
+current = true
+size = 100.0
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=1483269302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.7824783, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2" unique_id=1182832620]
+mesh = SubResource("PrismMesh_qyjo4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1985946657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 43.484055, 0)
+light_color = Color(0.289211, 0.09277602, 0.58652776, 1)
+light_angular_distance = 90.0
+sky_mode = 1
