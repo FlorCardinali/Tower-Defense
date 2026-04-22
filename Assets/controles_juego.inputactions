@@ -1,0 +1,263 @@
+{
+    "version": 1,
+    "name": "controles_juego",
+    "maps": [
+        {
+            "name": "jugador",
+            "id": "c02e3158-f577-471f-b324-9ec1b8c38447",
+            "actions": [
+                {
+                    "name": "movimiento",
+                    "type": "Value",
+                    "id": "2060e54d-9a8f-42c3-8092-e0d2cf73a1d4",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ataque",
+                    "type": "Button",
+                    "id": "77fc63a2-854c-47f8-9ca2-fb99a57699e1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "saltar",
+                    "type": "Button",
+                    "id": "d870cbb6-2444-4153-8a8c-8b2506cd3750",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "dfece09c-3a36-4912-a71b-5e615ea99cb9",
+                    "path": "<Keyboard>/period",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a22f3be-a491-4fa2-8cd2-eeca67b6a2db",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c962e224-9d31-4e8c-92da-c073fcc9f36a",
+                    "path": "<Keyboard>/numpadPeriod",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a0914891-ec34-49a9-86ca-9645bb2474af",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "ataque",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4b119b1-824e-41d7-8ead-00c1fed7ebb1",
+                    "path": "<Keyboard>/numpad0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "saltar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b51bca7a-a99e-403c-882f-3b3ac1e88218",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "saltar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10922a8a-b4d8-47cb-9ece-e2afecf96459",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "saltar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d08f7538-1291-4fa4-a951-9dcbd3370abb",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "saltar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "80839aa0-905e-4be6-b6e7-6469d0f45754",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "movimiento",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "9b1b4906-2d81-4dbc-9d38-74e5ac5df01a",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "eeff2fae-9223-418c-aa24-ff302d6e27e4",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "58d7eb1f-60a6-4f3e-84fb-79580c8039bd",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "4ddf32c8-205e-43b7-b5b1-31982b65b64e",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player2_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "4d6a6567-8298-4057-ac21-03082f669ac2",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "movimiento",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "78a40541-0d98-4fe1-b4cd-71a7eee2087f",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "dac1d961-abd1-4bcb-b9ff-8f76c0cb8520",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "8a208baf-496b-44a3-8403-f827f81396b0",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "67fafc04-cea8-4e1d-99c1-4c89f7dab9d5",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";player1_teclado",
+                    "action": "movimiento",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "player1_teclado",
+            "bindingGroup": "player1_teclado",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "player2_teclado",
+            "bindingGroup": "player2_teclado",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
