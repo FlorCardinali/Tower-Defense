@@ -3,11 +3,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Configuracion de Input")]
     public InputActionAsset inputAsset;
     public string esquema = "player1_teclado";
+
+    [Header("Ajustes de Personaje")]
     public float velocidad = 7f;
+    public float fuerzaSalto = 6f;
 
     private InputAction moveAction;
+    private InputAction jumpAction;
     private Vector2 inputMovimiento;
     private Rigidbody rb;
 
@@ -15,31 +20,51 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        // Buscamos la acción original
-        var originalAction = inputAsset.FindAction("movimiento");
+        // Configuramos el Movimiento
+        moveAction = ConfigurarAccion("movimiento");
 
-        // Creamos una copia para no romper el archivo original
-        moveAction = new InputAction();
-        foreach (var binding in originalAction.bindings)
+        // Configuramos el Salto y le decimos que ejecute la funcion "Saltar" al presionar
+        jumpAction = ConfigurarAccion("saltar");
+        jumpAction.performed += ctx => Saltar();
+    }
+
+    // Funcion para filtrar las teclas segun el esquema (P1 o P2)
+    InputAction ConfigurarAccion(string nombreAccion)
+    {
+        var original = inputAsset.FindAction(nombreAccion);
+        var nueva = new InputAction();
+        foreach (var b in original.bindings) nueva.AddBinding(b);
+
+        nueva.bindingMask = InputBinding.MaskByGroup(esquema);
+        nueva.Enable();
+        return nueva;
+    }
+
+    void Saltar()
+    {
+        // Chequeo de suelo simple: solo salta si no se esta moviendo mucho en el eje Y
+        if (Mathf.Abs(rb.linearVelocity.y) < 0.01f)
         {
-            moveAction.AddBinding(binding);
+            rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
         }
-
-        // APLICAMOS EL FILTRO: Solo las teclas que coincidan con el esquema
-        moveAction.bindingMask = InputBinding.MaskByGroup(esquema);
-
-        moveAction.Enable();
     }
 
     void Update()
     {
+        // Leee el movimiento cada frame
         inputMovimiento = moveAction.ReadValue<Vector2>();
     }
 
     void FixedUpdate()
     {
+        // Aplicamos el movimiento fisico
         Vector3 mov = new Vector3(inputMovimiento.x, 0, inputMovimiento.y) * velocidad * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + mov);
-        if (mov != Vector3.zero) transform.forward = mov;
+
+        // Rotamos la capsula hacia donde camina
+        if (mov.magnitude > 0.1f)
+        {
+            transform.forward = mov;
+        }
     }
 }
