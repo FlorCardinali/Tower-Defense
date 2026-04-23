@@ -1,66 +1,97 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5f;
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float depthMultiplier = 0.5f;
 
-    private Vector2 moveInput;
+    [Header("Jump & Gravity")]
+    [SerializeField] private float jumpHeight = 1.8f;
+    [SerializeField] private float gravity = -20f;
+
     private CharacterController controller;
-    private Vector3 velocity;
-    public float gravity = -9.81f;
-    public float jumpHeight = 2f;
 
-    void Awake()
+    private Vector2 input;
+    private Vector3 velocity; 
+    private bool isGrounded;
+
+    
+
+    private void Awake()
     {
         controller = GetComponent<CharacterController>();
     }
 
+    private void Update()
+    {
+        UpdateGroundedState();
+        HandleMovement();
+        HandleRotation();
+        ApplyGravity();
+    }
+
+  
+
     public void OnMove(InputValue value)
     {
-        moveInput = value.Get<Vector2>();
+        input = value.Get<Vector2>();
     }
+
     public void OnJump(InputValue value)
     {
-        if (value.isPressed && controller.isGrounded)
+        if (value.isPressed && isGrounded)
         {
             Jump();
         }
     }
 
-    void Update()
+    
+
+    private void HandleMovement()
     {
-        Move();
-        ApplyGravity();
+        Vector3 move = new Vector3(input.x, 0f, input.y);
+
+        
+        move.z *= depthMultiplier;
+
+        Vector3 horizontalVelocity = move * moveSpeed;
+
+       
+        Vector3 finalVelocity = horizontalVelocity + velocity;
+
+        controller.Move(finalVelocity * Time.deltaTime);
     }
 
-    void Move()
+    private void ApplyGravity()
     {
-        Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
-
-        // Ajuste tipo Beat 'em up (menos profundidad)
-        move.z *= 0.5f;
-
-        controller.Move(move * speed * Time.deltaTime);
-
-        if (move != Vector3.zero)
+        if (isGrounded && velocity.y < 0f)
         {
-            transform.forward = move;
+            velocity.y = -2f; // mantener pegado al suelo
         }
+
+        velocity.y += gravity * Time.deltaTime;
     }
-    void Jump()
+
+    private void Jump()
     {
         velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
 
-    void ApplyGravity()
+    private void HandleRotation()
     {
-        if (controller.isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
+        Vector3 moveDirection = new Vector3(input.x, 0f, input.y);
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        if (moveDirection.sqrMagnitude > 0.01f)
+        {
+            transform.forward = moveDirection;
+        }
+    }
+
+    private void UpdateGroundedState()
+    {
+        isGrounded = controller.isGrounded;
     }
 }
