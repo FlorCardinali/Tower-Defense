@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,9 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 input;
     private Vector3 velocity; 
     private bool isGrounded;
-
-    
-
+ 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -32,8 +32,6 @@ public class PlayerMovement : MonoBehaviour
         HandleRotation();
         ApplyGravity();
     }
-
-  
 
     public void OnMove(InputValue value)
     {
@@ -48,20 +46,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    
-
     private void HandleMovement()
     {
         Vector3 move = new Vector3(input.x, 0f, input.y);
-
-        
         move.z *= depthMultiplier;
-
         Vector3 horizontalVelocity = move * moveSpeed;
-
-       
         Vector3 finalVelocity = horizontalVelocity + velocity;
-
         controller.Move(finalVelocity * Time.deltaTime);
     }
 
