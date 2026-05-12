@@ -14,8 +14,7 @@ public class PlayerAttack : MonoBehaviour
     private bool isAttacking;
     private Color colorOriginal;
 
-    // Lista para guardar a quiénes ya golpeamos en el ataque actual para que el trigger no dispare multiples golpes
-    private List<IDaniable> yaGolpeados = new List<IDaniable>();
+ 
 
     private void Awake()
     {
@@ -35,7 +34,6 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator Atacar()
     {
         isAttacking = true;
-        yaGolpeados.Clear(); 
 
         rend.material.color = Color.yellow;
         if (hitboxCollider != null) hitboxCollider.enabled = true;
@@ -54,13 +52,13 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log("toque algoo");
         if (isAttacking)
         {
+            Debug.Log("Problema de tag");
             if (other.CompareTag("enemigo"))
             {
                 IDaniable objetoGolpeado = other.GetComponent<IDaniable>();
-                if (objetoGolpeado != null && !yaGolpeados.Contains(objetoGolpeado))
+                if (objetoGolpeado != null)
                 {
                     objetoGolpeado.tomarDanio(10);
-                    yaGolpeados.Add(objetoGolpeado); // Lo anotamos en la lista
                     Debug.Log("Golpe único a: " + other.name);
                 }
             }
