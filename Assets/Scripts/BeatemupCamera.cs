@@ -4,7 +4,7 @@ public class BeatemupCamera : MonoBehaviour
 {
     public Transform player1, player2;
 
-    // Asigna tus objetos de pared aquí en el Inspector
+   
     public Transform paredIzquierda, paredDerecha;
 
     // Configura las distancias fijas
@@ -16,19 +16,40 @@ public class BeatemupCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        if (player1 == null || player2 == null || paredIzquierda == null || paredDerecha == null) return;
+        // Las paredes son obligatorias, pero los jugadores ahora pueden faltar
+        if (paredIzquierda == null || paredDerecha == null) return;
 
-        // 1. Buscamos el punto medio de los jugadores (en X)
-        float medioX = (player1.position.x + player2.position.x) / 2f;
+        // Si los dos murieron, no nos movemos más
+        if (player1 == null && player2 == null) return;
 
-        // 2. Creamos la nueva posición de la cámara (como antes)
+        float medioX = 0f;
+
+        // CASO 1: Los dos jugadores están vivos (Lógica clásica)
+        if (player1 != null && player2 != null)
+        {
+            medioX = (player1.position.x + player2.position.x) / 2f;
+        }
+        // CASO 2: Solo queda vivo el Player 1
+        else if (player1 != null)
+        {
+            medioX = player1.position.x;
+        }
+        // CASO 3: Solo queda vivo el Player 2
+        else if (player2 != null)
+        {
+            medioX = player2.position.x;
+        }
+
+        // Creamos la nueva posición de la cámara basada en el objetivo válido
         Vector3 targetPosition = new Vector3(medioX, alturaFijaY, distanciaFijaZ);
 
-        // 3. Movimiento suave de la cámara
+        // Movimiento suave de la cámara
         transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime);
-        float paredY = paredIzquierda.position.y; // O una fija
-        float paredZ = 0f; // Donde caminan los jugadores
 
+        float paredY = paredIzquierda.position.y;
+        float paredZ = 0f;
+
+        // Las paredes se siguen moviendo con la cámara pase lo que pase
         paredIzquierda.position = new Vector3(transform.position.x - distanciaParedAlCentro, paredY, paredZ);
         paredDerecha.position = new Vector3(transform.position.x + distanciaParedAlCentro, paredY, paredZ);
     }

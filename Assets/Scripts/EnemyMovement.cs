@@ -2,21 +2,20 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 public class MovimientoEnemigoTorpe : MonoBehaviour
 {
     [Header("Movimiento y Rotación")]
     [SerializeField] private float velocidadMovimiento = 2f;
-    [SerializeField] private float velocidadRotacion = 2f; // Menor valor = más retardo/torpeza al girar
+    [SerializeField] private float velocidadRotacion = 2f;
     [SerializeField] private float rangoAtaque = 1.5f;
 
     [Header("Configuración de Ataque")]
+    [SerializeField] private int danioAtaque = 10;
     [SerializeField] private float cadenciaAtaque = 2f;
     [SerializeField] private float retrasoDelGolpe = 0.5f;
     [SerializeField] private float descansoAtaque = 0.3f;
     private float proximoTiempoDeAtaque = 0f;
     private bool estaAtacando = false;
-
 
     [Header("Ángulo de Caminata (Torpeza)")]
     [Range(-1f, 1f)]
@@ -24,7 +23,7 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
 
     [Header("Configuración de Objetivos")]
     [SerializeField] private float radioBusqueda = 15f;
-    [SerializeField] private float margenHisteresis = 3.0f; 
+    [SerializeField] private float margenHisteresis = 3.0f;
 
     private Transform jugadorObjetivo;
     private Transform[] todosLosJugadores;
@@ -34,7 +33,7 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
     {
         agente = GetComponent<NavMeshAgent>();
         agente.updateRotation = false;
-        //Aca buscamos los jugadores para saber a donde mover el bicho
+
         GameObject[] objetosJugadores = GameObject.FindGameObjectsWithTag("Player");
         todosLosJugadores = new Transform[objetosJugadores.Length];
 
@@ -56,16 +55,15 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
 
     private void SeleccionarObjetivo()
     {
-        //si no encontre nada, no hagas nada
         if (todosLosJugadores == null || todosLosJugadores.Length == 0) return;
 
-        //reiniciamos variables 
         Transform jugadorMasCercano = null;
         float distanciaMinima = float.MaxValue;
-        
+
         foreach (Transform jugador in todosLosJugadores)
         {
-            //distancia entre yo y cada player
+            if (jugador == null) continue; // Evita al fantasma
+
             float distancia = Vector3.Distance(transform.position, jugador.position);
             if (distancia < distanciaMinima)
             {
@@ -74,22 +72,30 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
             }
         }
 
-        //Si no esta a rango no voy corriendo hacia el, para no mandar a todos los enemigos de una xd
-        if (distanciaMinima > radioBusqueda)
+        // 1. Si no hay ningún jugador vivo en la escena, nos limpiamos y frenamos
+        if (jugadorMasCercano == null)
         {
             jugadorObjetivo = null;
+            if (agente.isOnNavMesh) agente.ResetPath();
             return;
         }
 
-       // tonces...
+        //  Si el más cercano está FUERA del radio de búsqueda, 
+        // el enemigo pierde el objetivo y NO lo persigue de una.
+        if (distanciaMinima > radioBusqueda)
+        {
+            jugadorObjetivo = null;
+            if (agente.isOnNavMesh) agente.ResetPath();
+            return;
+        }
+
+        //  Si sobrevivió al filtro de distancia, recién ahí lo fijamos como objetivo
         if (jugadorObjetivo == null)
         {
-            //si no tenes objetivop, anda al mas cercano
             jugadorObjetivo = jugadorMasCercano;
         }
         else
         {
-            //pero si ya lo fijaste, fijate que no halla otro ams cerca
             float distanciaObjetivoActual = Vector3.Distance(transform.position, jugadorObjetivo.position);
             if (distanciaMinima < distanciaObjetivoActual - margenHisteresis)
             {
@@ -100,7 +106,6 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
 
     private void MoverYRotarHaciaObjetivo()
     {
-
         if (estaAtacando) return;
 
         Vector3 direccion = jugadorObjetivo.position - transform.position;
@@ -112,13 +117,10 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
 
         if (direccion != Vector3.zero)
         {
-            //si hay direccion... rotamos pero con embolia
             Quaternion rotacionObjetivo = Quaternion.LookRotation(direccion);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadRotacion * Time.deltaTime);
         }
-    
 
-        //si me alejo del player, me acerco
         if (distancia > rangoAtaque)
         {
             if (alineacion >= precisionDeFrente)
@@ -144,7 +146,7 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
 
     private IEnumerator SecuenciaDeAtaque()
     {
-        estaAtacando = true; 
+        estaAtacando = true;
         agente.ResetPath();
 
         Debug.Log("Casteando...");
@@ -159,7 +161,16 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
             if (dirFinal.magnitude <= rangoAtaque && Vector3.Dot(transform.forward, dirFinal.normalized) >= precisionDeFrente)
             {
                 Debug.Log($"Golpie a: {jugadorObjetivo.name}");
-                //aca va lolgica de daño
+
+                // ==========================================
+                // ACA VA LA LOGICA DE DAÑO CON TU INTERFAZ
+                // ==========================================
+                IDaniable objetivo = jugadorObjetivo.GetComponent<IDaniable>();
+                if (objetivo != null)
+                {
+                    objetivo.tomarDanio(danioAtaque); // Llamamos a tu interfaz
+                }
+                // ==========================================
             }
             else
             {
@@ -167,7 +178,6 @@ public class MovimientoEnemigoTorpe : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(descansoAtaque);
-        estaAtacando = false; 
+        estaAtacando = false;
     }
-
 }
