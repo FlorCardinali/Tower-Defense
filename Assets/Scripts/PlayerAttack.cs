@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic; // Necesario para usar List
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,16 +10,15 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float cadence = 0.2f;
     [SerializeField] private Collider hitboxCollider;
 
-    private MeshRenderer rend;
-    private bool isAttacking;
-    private Color colorOriginal;
+    // Nuestro evento para avisar a otros scripts
+    public event Action<bool> OnAttackStateChanged;
 
- 
+    private Animator animator;
+    private bool isAttacking;
 
     private void Awake()
     {
-        rend = GetComponent<MeshRenderer>();
-        colorOriginal = rend.material.color;
+        animator = GetComponentInChildren<Animator>();
         if (hitboxCollider != null) hitboxCollider.enabled = false;
     }
 
@@ -35,13 +34,18 @@ public class PlayerAttack : MonoBehaviour
     {
         isAttacking = true;
 
-        rend.material.color = Color.yellow;
+        // Avisamos que el ataque empezó (frena el movimiento)
+        OnAttackStateChanged?.Invoke(true);
+
+        if (animator != null) animator.SetTrigger("ataque");
         if (hitboxCollider != null) hitboxCollider.enabled = true;
 
         yield return new WaitForSeconds(animationDuration);
 
         if (hitboxCollider != null) hitboxCollider.enabled = false;
-        rend.material.color = colorOriginal;
+
+        // Avisamos que el ataque terminó (devuelve el movimiento)
+        OnAttackStateChanged?.Invoke(false);
 
         yield return new WaitForSeconds(cadence);
         isAttacking = false;
@@ -49,10 +53,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("toque algoo");
         if (isAttacking)
         {
-            Debug.Log("Problema de tag");
             if (other.CompareTag("enemigo"))
             {
                 IDaniable objetoGolpeado = other.GetComponent<IDaniable>();
