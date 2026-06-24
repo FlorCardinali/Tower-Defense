@@ -174,7 +174,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -231,6 +231,7 @@ MonoBehaviour:
   velocidadMovimiento: 2
   velocidadRotacion: 2
   rangoAtaque: 2.2
+  danioAtaque: 10
   cadenciaAtaque: 2
   retrasoDelGolpe: 0.5
   descansoAtaque: 0.3
