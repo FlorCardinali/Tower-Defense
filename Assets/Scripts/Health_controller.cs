@@ -1,5 +1,5 @@
 using UnityEngine;
-using System; // ¡Necesario para el Action!
+using System; 
 
 public class Health_controller : MonoBehaviour, IDaniable
 {
@@ -7,7 +7,7 @@ public class Health_controller : MonoBehaviour, IDaniable
     public int vidaActual;
     public GameObject efectoExplosionPrefab;
 
-    // ESTO ES LO QUE TU BARRA BUSCA PARA FUNCIONAR
+
     public event Action<int, int> OnVidaCambiada;
 
     private bool estaSiendoGolpeado = false;
@@ -15,7 +15,7 @@ public class Health_controller : MonoBehaviour, IDaniable
     void Start()
     {
         vidaActual = vidaMaxima;
-        // Avisamos a la barra la vida inicial al arrancar
+        
         OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
     }
 
@@ -27,7 +27,7 @@ public class Health_controller : MonoBehaviour, IDaniable
         
         vidaActual -= danio;
         
-        // Avisamos a la barra que la vida cambió
+    
         OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
 
         if (vidaActual <= 0)
