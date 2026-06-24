@@ -10,6 +10,10 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float cadence = 0.2f;
     [SerializeField] private Collider hitboxCollider;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attackSound;
+
     // Nuestro evento para avisar a otros scripts
     public event Action<bool> OnAttackStateChanged;
 
@@ -33,6 +37,12 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator Atacar()
     {
         isAttacking = true;
+
+        // Reproducimos el sonido de ataque al instante
+        if (audioSource != null && attackSound != null)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
 
         // Avisamos que el ataque empezó (frena el movimiento)
         OnAttackStateChanged?.Invoke(true);
