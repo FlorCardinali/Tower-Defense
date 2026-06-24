@@ -1,42 +1,57 @@
 using UnityEngine;
-using System; 
+using System; // Â¡Necesario para el Action!
 
 public class Health_controller : MonoBehaviour, IDaniable
 {
-    public int vidaMaxima = 40;
+    public int vidaMaxima = 100;
     public int vidaActual;
+    public GameObject efectoExplosionPrefab;
 
-    //  Este evento avisará a la UI cada vez que la vida cambie (pasa vidaActual y vidaMaxima)
+    // ESTO ES LO QUE TU BARRA BUSCA PARA FUNCIONAR
     public event Action<int, int> OnVidaCambiada;
+
+    private bool estaSiendoGolpeado = false;
 
     void Start()
     {
         vidaActual = vidaMaxima;
-
-        // Avisamos la vida inicial al arrancar el juego para que la UI se llene
+        // Avisamos a la barra la vida inicial al arrancar
         OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
     }
 
     public void tomarDanio(int danio)
     {
-        if (vidaActual - danio <= 0)
+        if (estaSiendoGolpeado) return;
+
+        estaSiendoGolpeado = true;
+        
+        vidaActual -= danio;
+        
+        // Avisamos a la barra que la vida cambiÃ³
+        OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
+
+        if (vidaActual <= 0)
         {
             vidaActual = 0;
-            // Avisamos que la vida llegó a 0 antes de destruir el objeto
-            OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
             Morir();
         }
         else
         {
-            vidaActual -= danio;
-            // Avisamos que la vida bajó
-            OnVidaCambiada?.Invoke(vidaActual, vidaMaxima);
+            Invoke("ResetearGolpe", 0.3f);
         }
+    }
+
+    private void ResetearGolpe() 
+    { 
+        estaSiendoGolpeado = false; 
     }
 
     private void Morir()
     {
-        Debug.Log(gameObject.name + " se murió.");
+        if (efectoExplosionPrefab != null)
+        {
+            Instantiate(efectoExplosionPrefab, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 }
